@@ -1,8 +1,7 @@
 # Semana_OmniStack_10
 Aplicação para localização de desenvolvedores por geolocalização e tecnologias utilizadas pelos mesmos
 
-# Como iniciar:
- - Utilize a planilha para instalar os programas
+# Como iniciar (Backend):
  - Configure a conexão com o mongo Atlas no arquivo src/index.js
  - Rode o comando: yarn dev
 
