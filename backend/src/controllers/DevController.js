@@ -2,7 +2,7 @@ const axios = require('axios');
 const Dev = require('../models/Dev');
 const parseStringasArray = require('../Utils/parseStringasArray');
 
-// Index, Show, Store, Upadte, Destroy
+// Index, Show, Store, Update , Destroy
 
 module.exports = {
 
@@ -24,9 +24,9 @@ module.exports = {
         const { github_username } = request.params;
 
         // Search from github_username in the database
-        let dev = await Dev.findOne({ github_username });
+        let devs = await Dev.findOne({ github_username });
 
-        if (!dev) {
+        if (!devs) {
             return response.status(400).json({ message: "Usuário não encontrado!" });
         }
 
@@ -44,10 +44,10 @@ module.exports = {
         const { github_username } = request.params;
 
         // Search from github_username in the database
-        let dev = await Dev.findOne({ github_username });
+        let devs = await Dev.findOne({ github_username });
 
         // If username do not exists
-        if (!dev) {
+        if (!devs) {
             return request.status(400).json({ message: "Usuário não encontrado!" });
         }
 
@@ -55,14 +55,14 @@ module.exports = {
         // Using the existing data and taking the new info from body parameters 
         // to update the dev data
         const {
-            name = dev.name,
-            bio = dev.bio,
-            longitude = dev.location.coordinates[0],
-            latitude = dev.location.coordinates[1],
-            avatar_url = dev.avatar_url } = request.body;
+            name = devs.name,
+            bio = devs.bio,
+            longitude = devs.location.coordinates[0],
+            latitude = devs.location.coordinates[1],
+            avatar_url = devs.avatar_url } = request.body;
 
         // Check if techs were updated to transform text in Array for each tech
-        const techs = request.body.techs ? parseStringasArray(request.body.techs) : dev.techs;
+        const techs = request.body.techs ? parseStringasArray(request.body.techs) : devs.techs;
 
         // Create geolocation for lat & long (based on PointSchema)
         const location = {
@@ -87,9 +87,9 @@ module.exports = {
         const { github_username, techs, latitude, longitude } = request.body;
 
         // Verified if the dev exist, using github_username from body parameters 
-        let dev = await Dev.findOne({ github_username });
+        let devs = await Dev.findOne({ github_username });
 
-        if (!dev) {
+        if (!devs) {
 
             // With github_username and github API to take data from dev
             const apiResponse = await axios.get(`https://api.github.com/users/${github_username}`);
@@ -107,7 +107,7 @@ module.exports = {
             };
 
             // Create a new Dev from the get data
-            dev = await Dev.create({
+            devs = await Dev.create({
                 github_username,
                 name,
                 avatar_url,
@@ -119,6 +119,6 @@ module.exports = {
             console.log(name, avatar_url, bio, github_username);
         }
 
-        return response.json(dev);
+        return response.json(devs);
     }
 };
